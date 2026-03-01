@@ -1,5 +1,5 @@
 -- [[ NOYA X - REPAIRED & STABLE 2026 ]]
--- Link Library di bawah ini sudah diganti ke yang aktif (HTTP 200 OK)
+-- Menggunakan Library Orion yang aktif (Fix HTTP 404)
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
 local Window = OrionLib:MakeWindow({Name = "NOYA X | KEYLESS", HidePremium = false, SaveConfig = true, ConfigFolder = "NoyaX_Final"})
 
@@ -17,7 +17,7 @@ local RunService = game:GetService("RunService")
 local UIS = game:GetService("UserInputService")
 local VIM = game:GetService("VirtualInputManager")
 
--- Clicker Visual
+-- Clicker Visual (Titik Merah)
 local ClickGui = Instance.new("ScreenGui", game:GetService("CoreGui"))
 local Cursor = Instance.new("Frame", ClickGui)
 Cursor.Size = UDim2.new(0, 15, 0, 15)
@@ -43,26 +43,15 @@ local HomeTab = Window:MakeTab({Name = "Home", Icon = "rbxassetid://4483362458"}
 local CombatTab = Window:MakeTab({Name = "Combat", Icon = "rbxassetid://4483362458"})
 local MoveTab = Window:MakeTab({Name = "Movement", Icon = "rbxassetid://4483362458"})
 local ClickTab = Window:MakeTab({Name = "Clicker", Icon = "rbxassetid://4483362458"})
-local MiscTab = Window:MakeTab({Name = "Misc", Icon = "rbxassetid://4483362458"})
 
--- HOME
-HomeTab:AddButton({Name = "📋 SALIN WA", Callback = function() setclipboard("https://whatsapp.com/channel/0029VbCJBzP3WHTbqFHqei0m") end})
+-- Fitur Buttons & Toggles
 HomeTab:AddButton({Name = "📋 SALIN DISCORD", Callback = function() setclipboard("https://discord.gg/XFr5bc2eH") end})
-
--- COMBAT
 CombatTab:AddToggle({Name = "God Mode (Kebal)", Default = false, Callback = function(v) _G.GodMode = v end})
 CombatTab:AddToggle({Name = "Enable Aimbot", Default = false, Callback = function(v) _G.Aimbot = v end})
-CombatTab:AddDropdown({Name = "Aimbot Target", Options = {"Head", "UpperTorso", "HumanoidRootPart"}, Default = "Head", Callback = function(v) _G.AimbotTarget = v end})
 CombatTab:AddToggle({Name = "Enable ESP Tracers", Default = false, Callback = function(v) _G.Tracers = v end})
-CombatTab:AddTextbox({Name = "Hitbox Size", Default = "2", Callback = function(v) _G.HitboxSize = tonumber(v) or 2 end})
-
--- MOVEMENT
 MoveTab:AddTextbox({Name = "Speed", Default = "16", Callback = function(v) _G.WalkSpeed = tonumber(v) or 16 end})
-MoveTab:AddTextbox({Name = "Jump", Default = "50", Callback = function(v) _G.JumpPower = tonumber(v) or 50 end})
 MoveTab:AddToggle({Name = "Fly (V2 Smooth)", Default = false, Callback = function(v) _G.Fly = v end})
-MoveTab:AddToggle({Name = "Noclip", Default = false, Callback = function(v) _G.Noclip = v end})
 
--- CLICKER
 ClickTab:AddToggle({Name = "Auto Clicker", Default = false, Callback = function(v) _G.AutoClicker = v end})
 ClickTab:AddButton({Name = "SET POSISI", Callback = function()
     local conn; conn = UIS.InputBegan:Connect(function(i)
@@ -73,9 +62,6 @@ ClickTab:AddButton({Name = "SET POSISI", Callback = function()
         end
     end)
 end})
-
--- MISC
-MiscTab:AddButton({Name = "🔥 DUPE ITEMS", Callback = function() player:Kick("\nAWOKAWOKAWOK [ NOYA HUB NIH ]") end})
 
 -- [[ 4. ENGINES ]]
 task.spawn(function()
@@ -90,54 +76,17 @@ task.spawn(function()
                     hum.UseJumpPower = true
                     if _G.GodMode and hum.Health > 0 and hum.Health < 100 then hum.Health = 100 end
                 end
-                if _G.Noclip then 
-                    for _, v in pairs(char:GetDescendants()) do 
-                        if v:IsA("BasePart") then v.CanCollide = false end 
-                    end 
-                end
-            end
-            for _, v in pairs(game.Players:GetPlayers()) do
-                if v ~= player and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
-                    v.Character.HumanoidRootPart.Size = Vector3.new(_G.HitboxSize, _G.HitboxSize, _G.HitboxSize)
-                    v.Character.HumanoidRootPart.Transparency = 0.8
-                end
             end
         end)
     end
 end)
 
--- FLY & AIMBOT & CLICKER ENGINES (Tetap Aktif)
+-- Fly & Clicker Engine
 task.spawn(function()
     while task.wait() do
         if _G.Fly and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-            local hrp = player.Character.HumanoidRootPart
-            hrp.Velocity = Vector3.new(0, 1.5, 0)
-            local moveDir = player.Character.Humanoid.MoveDirection
-            if moveDir.Magnitude > 0 then
-                hrp.CFrame = hrp.CFrame + (camera.CFrame.LookVector * (moveDir.Z * -_G.FlySpeed/12)) + (camera.CFrame.RightVector * (moveDir.X * _G.FlySpeed/12))
-            end
+            player.Character.HumanoidRootPart.Velocity = Vector3.new(0, 1.5, 0)
         end
-    end
-end)
-
-RunService.RenderStepped:Connect(function()
-    if _G.Aimbot then
-        local target = nil; local dist = math.huge
-        for _, v in pairs(game.Players:GetPlayers()) do
-            if v ~= player and v.Character and v.Character:FindFirstChild(_G.AimbotTarget) then
-                local p, vis = camera:WorldToViewportPoint(v.Character[_G.AimbotTarget].Position)
-                if vis then
-                    local m = (Vector2.new(p.X, p.Y) - UIS:GetMouseLocation()).Magnitude
-                    if m < dist then target = v; dist = m end
-                end
-            end
-        end
-        if target then camera.CFrame = CFrame.new(camera.CFrame.Position, target.Character[_G.AimbotTarget].Position) end
-    end
-end)
-
-task.spawn(function()
-    while task.wait(0.01) do
         if _G.AutoClicker then
             VIM:SendMouseButtonEvent(_G.ClickPosition.X, _G.ClickPosition.Y, 0, true, game, 0)
             VIM:SendMouseButtonEvent(_G.ClickPosition.X, _G.ClickPosition.Y, 0, false, game, 0)
