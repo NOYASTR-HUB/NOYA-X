@@ -1,6 +1,6 @@
--- [[ NOYA X -  ]]
-local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/jensonhirst/Orion/main/source')))()
-local Window = OrionLib:MakeWindow({Name = "NOYA X|KEYLESS", HidePremium = false, SaveConfig = true, ConfigFolder = "NoyaX_Final"})
+-- [[ NOYA X - REPAIRED & STABLE ]]
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+local Window = OrionLib:MakeWindow({Name = "NOYA X | KEYLESS", HidePremium = false, SaveConfig = true, ConfigFolder = "NoyaX_Final"})
 
 -- [[ 1. ANTI-AFK ]]
 local VirtualUser = game:GetService("VirtualUser")
@@ -16,6 +16,7 @@ local RunService = game:GetService("RunService")
 local UIS = game:GetService("UserInputService")
 local VIM = game:GetService("VirtualInputManager")
 
+-- Clicker Visual
 local ClickGui = Instance.new("ScreenGui", game:GetService("CoreGui"))
 local Cursor = Instance.new("Frame", ClickGui)
 Cursor.Size = UDim2.new(0, 15, 0, 15)
@@ -37,8 +38,8 @@ _G.AutoClicker = false
 _G.ClickPosition = Vector2.new(0,0)
 
 -- [[ 3. TABS ]]
-local HomeTab = Window:MakeTab({Name = "discord", Icon = "rbxassetid://4483362458"})
-local CombatTab = Window:MakeTab({Name = "cheat", Icon = "rbxassetid://4483362458"})
+local HomeTab = Window:MakeTab({Name = "Home", Icon = "rbxassetid://4483362458"})
+local CombatTab = Window:MakeTab({Name = "Combat", Icon = "rbxassetid://4483362458"})
 local MoveTab = Window:MakeTab({Name = "Movement", Icon = "rbxassetid://4483362458"})
 local ClickTab = Window:MakeTab({Name = "Clicker", Icon = "rbxassetid://4483362458"})
 local MiscTab = Window:MakeTab({Name = "Misc", Icon = "rbxassetid://4483362458"})
@@ -76,20 +77,25 @@ end})
 MiscTab:AddButton({Name = "🔥 DUPE ITEMS", Callback = function() player:Kick("\nAWOKAWOKAWOK [ NOYA HUB NIH ]") end})
 
 -- [[ 4. ENGINES ]]
-
--- MAIN ENGINE (SPEED, JUMP, GOD, HITBOX)
 task.spawn(function()
     while task.wait() do
         pcall(function()
             local char = player.Character
-            local hum = char:WaitForChild("Humanoid")
-            hum.WalkSpeed = _G.WalkSpeed
-            hum.JumpPower = _G.JumpPower
-            hum.UseJumpPower = true -- HARUS TRUE BIAR JUMP WORK
-            
-            if _G.GodMode and hum.Health > 0 and hum.Health < 100 then hum.Health = 100 end
-            if _G.Noclip then for _, v in pairs(char:GetDescendants()) do if v:IsA("BasePart") then v.CanCollide = false end end end
-            
+            if char then
+                local hum = char:FindFirstChildOfClass("Humanoid")
+                if hum then
+                    hum.WalkSpeed = _G.WalkSpeed
+                    hum.JumpPower = _G.JumpPower
+                    hum.UseJumpPower = true
+                    if _G.GodMode and hum.Health > 0 and hum.Health < 100 then hum.Health = 100 end
+                end
+                if _G.Noclip then 
+                    for _, v in pairs(char:GetDescendants()) do 
+                        if v:IsA("BasePart") then v.CanCollide = false end 
+                    end 
+                end
+            end
+            -- Hitbox
             for _, v in pairs(game.Players:GetPlayers()) do
                 if v ~= player and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
                     v.Character.HumanoidRootPart.Size = Vector3.new(_G.HitboxSize, _G.HitboxSize, _G.HitboxSize)
@@ -100,7 +106,7 @@ task.spawn(function()
     end
 end)
 
--- FLY ENGINE
+-- FLY
 task.spawn(function()
     while task.wait() do
         if _G.Fly and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
@@ -114,19 +120,7 @@ task.spawn(function()
     end
 end)
 
--- AIMBOT & ESP ENGINE
-local function CreateESP(p)
-    local l = Drawing.new("Line")
-    l.Color = Color3.fromRGB(0, 255, 255); l.Thickness = 1
-    RunService.RenderStepped:Connect(function()
-        if _G.Tracers and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
-            local pos, vis = camera:WorldToViewportPoint(p.Character.HumanoidRootPart.Position)
-            if vis then l.From = Vector2.new(camera.ViewportSize.X/2, camera.ViewportSize.Y); l.To = Vector2.new(pos.X, pos.Y); l.Visible = true else l.Visible = false end
-        else l.Visible = false end
-    end)
-end
-for _, v in pairs(game.Players:GetPlayers()) do if v ~= player then CreateESP(v) end end
-
+-- ESP & AIMBOT
 RunService.RenderStepped:Connect(function()
     if _G.Aimbot then
         local target = nil; local dist = math.huge
@@ -143,7 +137,7 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
--- CLICKER
+-- CLICKER ENGINE
 task.spawn(function()
     while task.wait(0.01) do
         if _G.AutoClicker then
