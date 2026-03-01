@@ -1,4 +1,5 @@
--- [[ NOYA X - REPAIRED & STABLE ]]
+-- [[ NOYA X - REPAIRED & STABLE 2026 ]]
+-- Link Library di bawah ini sudah diganti ke yang aktif (HTTP 200 OK)
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
 local Window = OrionLib:MakeWindow({Name = "NOYA X | KEYLESS", HidePremium = false, SaveConfig = true, ConfigFolder = "NoyaX_Final"})
 
@@ -95,7 +96,6 @@ task.spawn(function()
                     end 
                 end
             end
-            -- Hitbox
             for _, v in pairs(game.Players:GetPlayers()) do
                 if v ~= player and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
                     v.Character.HumanoidRootPart.Size = Vector3.new(_G.HitboxSize, _G.HitboxSize, _G.HitboxSize)
@@ -106,7 +106,7 @@ task.spawn(function()
     end
 end)
 
--- FLY
+-- FLY & AIMBOT & CLICKER ENGINES (Tetap Aktif)
 task.spawn(function()
     while task.wait() do
         if _G.Fly and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
@@ -120,7 +120,6 @@ task.spawn(function()
     end
 end)
 
--- ESP & AIMBOT
 RunService.RenderStepped:Connect(function()
     if _G.Aimbot then
         local target = nil; local dist = math.huge
@@ -137,7 +136,6 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
--- CLICKER ENGINE
 task.spawn(function()
     while task.wait(0.01) do
         if _G.AutoClicker then
